@@ -145,7 +145,7 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 value: response.data.result.textDenominationValue
             };
         } else {
-            await delay(5, 10);
+            await delay(5, 15);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
@@ -200,6 +200,7 @@ async function processPhoneNumber(phone) {
         }
 
         let voucherResult = null;
+        await delay(90, 120);
         while (!voucherResult) {
             const voucherCode = await randomCode();
             voucherResult = await vouchersApply(verifyTokenValue, 4, 15, voucherCode);
