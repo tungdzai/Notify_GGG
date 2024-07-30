@@ -145,7 +145,7 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 value: response.data.result.textDenominationValue
             };
         } else {
-            await delay(3, 10);
+            await delay(5, 10);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
@@ -205,7 +205,7 @@ async function processPhoneNumber(phone) {
             voucherResult = await vouchersApply(verifyTokenValue, 4, 15, voucherCode);
             if (!voucherResult) {
                 console.log(`Retrying voucher application for phone: ${phone}`);
-                await delay(30, 90);
+                await delay(60, 90);
             }
         }
         const message=`Voucher: ${voucherResult.voucherCode}, value: ${voucherResult.value}`;
