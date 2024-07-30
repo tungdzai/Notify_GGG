@@ -216,7 +216,7 @@ async function processPhoneNumber(phone) {
 }
 async function checkVoucher(){
     try {
-        const listPhone = await readTokensFromFile('test.txt');
+        const listPhone = await readTokensFromFile('data.txt');
         await Promise.all(listPhone.map(phone => processPhoneNumber(`0${phone}`)));
     } catch (error) {
         console.error('Error reading phone numbers from file:', error.message);
