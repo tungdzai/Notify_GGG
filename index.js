@@ -145,7 +145,7 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 value: response.data.result.textDenominationValue
             };
         } else {
-            await delay(2, 10);
+            await delay(30, 90);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
@@ -216,7 +216,7 @@ async function processPhoneNumber(phone) {
 }
 async function checkVoucher(){
     try {
-        const listPhone = await readTokensFromFile('data.txt');
+        const listPhone = await readTokensFromFile('test.txt');
         await Promise.all(listPhone.map(phone => processPhoneNumber(`0${phone}`)));
     } catch (error) {
         console.error('Error reading phone numbers from file:', error.message);
