@@ -206,7 +206,7 @@ async function processPhoneNumber(phone) {
             voucherResult = await vouchersApply(verifyTokenValue, 4, 15, voucherCode);
             if (!voucherResult) {
                 console.log(`Retrying voucher application for phone: ${phone}`);
-                await delay(60, 90);
+                await delay(30, 90);
             }
         }
         const message=`Voucher: ${voucherResult.voucherCode}, value: ${voucherResult.value}`;
