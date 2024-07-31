@@ -25,7 +25,7 @@ async function login(phone, retries = 3) {
         return null;
     }
     if (retries < 3) {
-        await delay(2, 10);
+        await delay(2, 5);
     }
     try {
         let password = "111111";
@@ -145,7 +145,7 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 value: response.data.result.textDenominationValue
             };
         } else {
-            await delay(5, 15);
+            await delay(2, 4);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
@@ -200,13 +200,12 @@ async function processPhoneNumber(phone) {
         }
 
         let voucherResult = null;
-        await delay(90, 120);
         while (!voucherResult) {
             const voucherCode = await randomCode();
             voucherResult = await vouchersApply(verifyTokenValue, 4, 15, voucherCode);
             if (!voucherResult) {
                 console.log(`Retrying voucher application for phone: ${phone}`);
-                await delay(30, 90);
+                await delay(3, 5);
             }
         }
         const message=`Voucher: ${voucherResult.voucherCode}, value: ${voucherResult.value}`;
