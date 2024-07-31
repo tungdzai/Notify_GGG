@@ -118,10 +118,6 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
     if (retries < 0) {
         return null;
     }
-    if (retries<4){
-        await delay(1,3)
-    }
-
     const data = {
         "merchantId": 42457,
         "voucherCode": `DT${headGift}${code}`,
@@ -139,7 +135,7 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
 
     try {
         console.log(`DT${headGift}${code}`);
-        const response = await axios.post('https://backendecom.tgss.vn/api/mobile/v1/vouchers/apply', data, { headers });
+        const response = await axios.post('https://backendecom.tgss.vn/api/mobile/v1/vouchers/apply', data, {headers});
         console.log(response.data)
         const status = response.data.messageCode;
         if (status === 200) {
@@ -147,14 +143,16 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 voucherCode: response.data.result.voucherCode,
                 value: response.data.result.textDenominationValue
             };
+        } else if (status === 400 && response.data.message === 'Có lỗi xảy ra khi xử lý yêu cầu, vui lòng liên hệ quản trị hệ thống để được hỗ trợ thêm (500)') {
+            await delay(30, 60);
+            return await vouchersApply(tokenVerify, retries, headGift, code);
         } else {
-            await delay(10, 15);
+            await delay(2, 7);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
         console.error('Error applying voucher:', error);
-        await delay(15,20)
-        return await vouchersApply(tokenVerify,retries,headGift,code);
+        return null;
     }
 }
 
@@ -186,6 +184,7 @@ async function readTokensFromFile(filename) {
         });
     });
 }
+
 async function processPhoneNumber(phone) {
     try {
         const loginToken = await login(phone);
@@ -212,13 +211,14 @@ async function processPhoneNumber(phone) {
                 await delay(3, 5);
             }
         }
-        const message=`Voucher: ${voucherResult.voucherCode}, value: ${voucherResult.value}`;
+        const message = `Voucher: ${voucherResult.voucherCode}, value: ${voucherResult.value}`;
         await sendTelegramMessage(message);
     } catch (error) {
         console.error(`Error processing phone ${phone}:`, error.message);
     }
 }
-async function checkVoucher(){
+
+async function checkVoucher() {
     try {
         const listPhone = await readTokensFromFile('data.txt');
         await Promise.all(listPhone.map(phone => processPhoneNumber(`0${phone}`)));
@@ -227,4 +227,5 @@ async function checkVoucher(){
     }
 
 }
+
 checkVoucher();
