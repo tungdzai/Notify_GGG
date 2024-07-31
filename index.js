@@ -118,6 +118,9 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
     if (retries < 0) {
         return null;
     }
+    if (retries<4){
+        await delay(1,3)
+    }
 
     const data = {
         "merchantId": 42457,
@@ -145,12 +148,13 @@ async function vouchersApply(tokenVerify, retries = 4, headGift = 15, code) {
                 value: response.data.result.textDenominationValue
             };
         } else {
-            await delay(2, 4);
+            await delay(2, 5);
             return await vouchersApply(tokenVerify, retries - 1, headGift + 1, code);
         }
     } catch (error) {
         console.error('Error applying voucher:', error);
-        return null;
+        await delay(15,20)
+        return await vouchersApply(tokenVerify,retries,headGift,code);
     }
 }
 
